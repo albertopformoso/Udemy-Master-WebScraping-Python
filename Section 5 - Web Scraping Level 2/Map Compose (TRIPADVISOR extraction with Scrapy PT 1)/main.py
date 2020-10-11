@@ -39,7 +39,7 @@ class TripAdvisor(CrawlSpider):
 
         item.add_xpath('name', '//h1[@id="HEADING"]/text()')
         if not item.get_xpath('//div[contains(@class, "ui_column _3i")]/div/text()'):
-            item.add_xpath('price','//div[contains(@data-sizegroup, "hr_chevron_prices")][1]',
+            item.add_xpath('price','//div[contains(@data-sizegroup, "hr_chevron_prices")][1]/text()',
                            MapCompose(self.removePriceSymbol))
         else:
             item.add_xpath('price', '//div[contains(@class, "ui_column _3i")]/div/text()',
