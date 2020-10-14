@@ -1,33 +1,16 @@
 import requests
-from lxml import html
+import json
 
 headers = {'user-agent': 'Mozilla/5.0 CK={} (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko'}
 
-login_form_url = 'https://github.com/login'
+endpoint = 'https://api.github.com/user/repos'
 
-session = requests.Session()
+user = 'XXX'
+password = 'XXX'
 
-login_form_res = session.get(login_form_url, headers=headers)
+response = requests.get(endpoint, headers=headers, auth=(user, password))
 
-parser = html.fromstring(login_form_res.text)
-token = parser.xpath('//input[@name="authenticity_token"]/@value')
+repos = response.json()
 
-login_url = 'https://github.com/session'
-login_data = {
-    'login': 'XXX',
-    'password': 'XXX',
-    'commit': 'Sign in',
-    'authenticity_token': token
-}
-
-session.post(login_url, data=login_data, headers=headers)
-
-data_url = 'https://github.com/albertopformoso?tab=repositories'
-response = session.get(data_url, headers=headers)
-
-parser = html.fromstring(response.text)
-repositories = parser.xpath('//h3[@class="wb-break-all"]/a/text()')
-
-for repository in repositories:
-    print(repository)
-
+for repo in repos:
+    print(repo['name'], '\n')
